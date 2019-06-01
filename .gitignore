@@ -1,0 +1,11 @@
+./Data/
+./Data
+.ipynb_*
+*.pyc
+*.dat
+*.jpg
+*.png
+*.code-workspace
+__pycache__/
+*.pt
+
