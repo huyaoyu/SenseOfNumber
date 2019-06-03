@@ -6,7 +6,7 @@ import torch
 import torch.nn as nn
 
 import Arguments
-from Model.Models import NaiveFullyConnected
+from Model.Models import NaiveFullyConnected, NaiveFullyConnected_V
 
 class Job(object):
     def __init__(self):
@@ -64,7 +64,7 @@ class TestJob(Job):
         pass
 
 class TrainNaiveFullyConnected(TrainJob):
-    def __init__(self):
+    def __init__(self, fnVec, fnDist):
         super(TrainNaiveFullyConnected, self).__init__()
 
         self.model = NaiveFullyConnected()
@@ -73,13 +73,15 @@ class TrainNaiveFullyConnected(TrainJob):
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001, weight_decay=0.0)
 
         # Training process specific variables.
+        self.fnVec     = fnVec
+        self.fnDist    = fnDist
         self.vectors   = None
         self.distances = None
 
     def initialize(self):
         # Read the input dataset.
-        self.vectors   = np.loadtxt("vectors.dat", dtype=np.int32)
-        self.distances = np.loadtxt("distances.dat", dtype=np.int32)
+        self.vectors   = np.loadtxt(self.fnVec, dtype=np.int32)
+        self.distances = np.loadtxt(self.fnDist, dtype=np.int32)
         self.distances = self.distances.reshape((-1, 1))
 
         print("vectors.shape = {}".format( self.vectors.shape ))
@@ -211,14 +213,58 @@ class TestNaiveFullyConnected(TestJob):
         print( "%d Total tests. Average loss = %f." % ( nLoops, lossSum/nLoops ) )
         print( "All test doen." )
 
+class TestNaiveFullyConnected_V(TestNaiveFullyConnected):
+    def __init__(self, fnVec, fnDist, idx=0):
+        super(TestNaiveFullyConnected_V, self).__init__(fnVec, fnDist)
+
+        self.model = NaiveFullyConnected_V()
+        self.idx = idx
+
+    def execute(self):
+        nVectors  = self.vectors.shape[0]
+        lenVector = self.vectors.shape[1]
+
+        # Training.
+        idx = np.linspace(0, nVectors-1, nVectors, dtype=np.int32)
+        N = 1 # Size of the miniBatch
+
+        self.model.eval()
+
+        idxPos = self.idx * N
+
+        # Fill in the miniBatch.
+        mbIdx = idx[idxPos:idxPos+N]
+        mb    = self.vectors[mbIdx, :]
+
+        mbDist = self.distances[mbIdx, :]
+
+        # Convert the mini batch into torch tensor.
+        mb     = torch.from_numpy(mb).float()
+        mbDist = torch.from_numpy(mbDist).float()
+        
+        # Forward.
+        with torch.no_grad():
+            dPred = self.model( mb )
+
+        # Show test result for single entry.
+        trueDist = mbDist.numpy()[0, 0]
+        predDist = dPred.numpy()[0, 0]
+
+        # Loss.
+        loss = self.criterion( dPred, mbDist )
+
+        print( "idx = %3d, true = %2d, pred = %5.2f, loss = %f." % ( self.idx, trueDist, predDist, loss.item() ) )
+
 if __name__ == "__main__":
 
     args = Arguments.args
 
     if ( "train" == args.job_mode ):
-        job = TrainNaiveFullyConnected()
+        job = TrainNaiveFullyConnected( args.fn_vec, args.fn_dist )
     elif ( "test" == args.job_mode ):
-        job = TestNaiveFullyConnected( args.test_fn_vec, args.test_fn_dist )
+        job = TestNaiveFullyConnected( args.fn_vec, args.fn_dist )
+    elif ( "test_v" == args.job_mode ):
+        job = TestNaiveFullyConnected_V( args.fn_vec, args.fn_dist, args.test_v_idx )
     elif ( "infer" == args.job_mode ):
         job = None
         raise Exception("Not implemented yet.")

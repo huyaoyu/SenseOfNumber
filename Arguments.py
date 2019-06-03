@@ -12,12 +12,15 @@ parser.add_argument("--epoches", type=int, default=1000, \
     help="The number of outer looping epoches.")
 
 parser.add_argument("--job-mode", type=str, default="train", \
-    help="Set job mode. Choose one from \"train\", \"test\" and \"infer\"")
+    help="Set job mode. Choose one from \"train\", \"test\", \"test_v\", and \"infer\"")
 
-parser.add_argument("--test-fn-vec", type=str, default="vectors.dat", \
-    help="The file name of vectors for testing.")
+parser.add_argument("--test-v-idx", type=int, default=0, \
+    help="The index of test data when --job-mode is \"test_v\"")
 
-parser.add_argument("--test-fn-dist", type=str, default="distances.dat", \
-    help="The file name of distances for testing.")
+parser.add_argument("--fn-vec", type=str, default="vectors.dat", \
+    help="The file name of vectors.")
+
+parser.add_argument("--fn-dist", type=str, default="distances.dat", \
+    help="The file name of distances.")
 
 args = parser.parse_args()

@@ -8,4 +8,5 @@
 *.code-workspace
 __pycache__/
 *.pt
+*.npy
 
