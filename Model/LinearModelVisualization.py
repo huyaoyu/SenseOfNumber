@@ -197,7 +197,7 @@ class LinearModelGraph(object):
 
             # Nerons.
             for iC in range( layer.output.shape[0] ):
-                circle = np.zeros( (7), dtype=np.float32 )
+                circle = np.zeros( (8), dtype=np.float32 )
 
                 circle[0] = x0
                 circle[1] = yOrigin + iC * self.neronSpace
@@ -206,6 +206,7 @@ class LinearModelGraph(object):
                 circle[4] = cm[iC, 1]
                 circle[5] = cm[iC, 2]
                 circle[6] = cm[iC, 3]
+                circle[7] = layer.BA[iC]
 
                 circles.append( circle )
 
@@ -226,7 +227,7 @@ class LinearModelGraph(object):
 
                 # Nerons.
                 for iC in range( layer.output.shape[0] ):
-                    circle = np.zeros( (7), dtype=np.float32 )
+                    circle = np.zeros( (8), dtype=np.float32 )
 
                     circle[0] = x0
                     circle[1] = yOrigin + iC * self.neronSpace
@@ -235,6 +236,7 @@ class LinearModelGraph(object):
                     circle[4] = cm[iC, 1]
                     circle[5] = cm[iC, 2]
                     circle[6] = cm[iC, 3]
+                    circle[7] = layer.output[iC]
 
                     circles.append( circle )
 

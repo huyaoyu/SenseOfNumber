@@ -40,7 +40,7 @@ if __name__ == "__main__":
         ax.plot( x[:, i], y[:, i], color=ct[i] )
 
     for cc in circles:
-        color = cc[3:] / 255
+        color = cc[3:7] / 255
         circle = Circle(( cc[0], cc[1] ), cc[2], fill=True)
         circle.set_facecolor( color )
         circle.set_edgecolor( "k" )
