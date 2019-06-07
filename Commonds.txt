@@ -1,0 +1,11 @@
+
+# Visualization
+
+# Save intermediate results for all the entries in the input file.
+python NaiveTest.py --working-dir WD/SingleTest --load-model --job-mode test_v --test-v-idx -1 --fn-vec VectorsSelectiveTraining.dat --fn-dist DistancesSelectiveTraining.dat --test-v-intermediate-dir Intermediate
+
+# Save intermediate results for a specific entry in the input file.
+python NaiveTest.py --working-dir WD/SingleTest --load-model --job-mode test_v --test-v-idx 0 --fn-vec VectorsSelectiveTraining.dat --fn-dist DistancesSelectiveTraining.dat --test-v-intermediate-dir Intermediate
+
+# Generate visualization images.
+python DrawLinearModelMatplotlib.py --working-dir WD/SingleTest --input CirclesLines_Indexing.json --output-dir Visulization

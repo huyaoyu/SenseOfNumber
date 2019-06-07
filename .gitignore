@@ -1,5 +1,6 @@
 ./Data/
 ./Data
+./WD/
 .ipynb_*
 *.pyc
 *.dat

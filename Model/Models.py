@@ -80,7 +80,7 @@ class NaiveFullyConnected_V(NaiveFullyConnected):
         circles = np.stack(circles, axis=0)
         lines = np.stack(lines, axis=0)
         
-        np.save("circles.npy", circles)
-        np.save("lines.npy", lines)
+        # np.save("circles.npy", circles)
+        # np.save("lines.npy", lines)
 
-        return self.model(x)
+        return self.model(x), circles, lines

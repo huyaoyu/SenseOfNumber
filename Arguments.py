@@ -4,7 +4,10 @@ from __future__ import print_function
 import argparse
 
 parser = argparse.ArgumentParser(description="Train a simple fully connected neural network.")
-    
+
+parser.add_argument("--working-dir", type=str, default="./", \
+    help="The working directory.")
+
 parser.add_argument("--load-model", action="store_true", default=False, \
     help="Load saved.pt.")
 
@@ -16,6 +19,9 @@ parser.add_argument("--job-mode", type=str, default="train", \
 
 parser.add_argument("--test-v-idx", type=int, default=0, \
     help="The index of test data when --job-mode is \"test_v\"")
+
+parser.add_argument("--test-v-intermediate-dir", type=str, default="Intermediate", \
+    help="The directory to save the intermediate data. It is relative to the working directory.")
 
 parser.add_argument("--fn-vec", type=str, default="vectors.dat", \
     help="The file name of vectors.")
